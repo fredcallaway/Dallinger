@@ -174,6 +174,8 @@ def verify_package(verbose=True):
         os.path.join("static", "scripts", "dallinger.js"),
         os.path.join("static", "scripts", "dallinger2.js"),
         os.path.join("static", "scripts", "reqwest.min.js"),
+        os.path.join("static", "scripts", "require.js"),
+        os.path.join("static", "scripts", "tracking"),
         os.path.join("static", "robots.txt")
     ]
 
@@ -294,6 +296,8 @@ def setup_experiment(debug=True, verbose=False, app=None, exp_config=None):
         os.makedirs("templates")
     if not os.path.exists(os.path.join("static", "css")):
         os.makedirs(os.path.join("static", "css"))
+    if not os.path.exists(os.path.join("static", "scripts", "tracking")):
+        os.makedirs(os.path.join("static", "scripts", "tracking"))
 
     # Rename experiment.py for backwards compatibility.
     os.rename(
@@ -329,8 +333,13 @@ def setup_experiment(debug=True, verbose=False, app=None, exp_config=None):
         os.path.join("static", "scripts", "dallinger.js"),
         os.path.join("static", "scripts", "dallinger2.js"),
         os.path.join("static", "scripts", "reqwest.min.js"),
+        os.path.join("static", "scripts", "require.js"),
         os.path.join("static", "scripts", "reconnecting-websocket.js"),
         os.path.join("static", "scripts", "spin.min.js"),
+        os.path.join("static", "scripts", "tracking", "load-tracker.js"),
+        os.path.join("static", "scripts", "tracking", "scribe-analytics.min.js"),
+        os.path.join("static", "scripts", "tracking", "scribe-console.js"),
+        os.path.join("static", "scripts", "tracking", "scribe-dallinger.js"),
         os.path.join("templates", "error.html"),
         os.path.join("templates", "launch.html"),
         os.path.join("templates", "complete.html"),
