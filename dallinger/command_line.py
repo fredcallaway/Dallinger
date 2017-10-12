@@ -98,7 +98,7 @@ def timeout(seconds):
                     log("Sending email...")
                     timeoutEmail.send_idle_experiment()
                 except KeyError:
-                    log("Config not setup to send emails...")
+                    log("Config not set to send emails...")
 
             signal.signal(signal.SIGALRM, _handle_timeout)
             signal.alarm(seconds)
@@ -445,7 +445,6 @@ def debug(verbose, bot, proxy, exp_config=None):
 
 def deploy_sandbox_shared_setup(verbose=True, app=None, exp_config=None):
     """Set up Git, push to Heroku, and launch the app."""
-
     if verbose:
         out = None
     else:
