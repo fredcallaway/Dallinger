@@ -84,23 +84,24 @@ def error(msg, delay=0.5, chevrons=True, verbose=True):
         time.sleep(delay)
 
 
-def timeout(seconds, app):
+def timeout(seconds):
+    """Timeout decorator"""
     def decorator(func):
-        def _handle_timeout(signum, frame):
-            config = get_config()
-            config.load()
-            try:
-                EmailingHITMessager(when=None, assignment_id=None, hit_duration=seconds,
-                                    time_active=seconds, config=config, uuid=None)
-                log("Sending email...")
-
-            except KeyError:
-                log("Config not setup to send emails...")
-
         def wrapper(*args, **kwargs):
+            def _handle_timeout(signum, frame):
+                config = get_config()
+                config.load()
+                app = kwargs['app']
+                try:
+                    timeoutEmail = EmailingHITMessager(when=None, assignment_id=None, hit_duration=seconds,
+                                                       time_active=seconds, config=config, app=app)
+                    log("Sending email...")
+                    timeoutEmail.send_idle_experiment()
+                except KeyError:
+                    log("Config not setup to send emails...")
+
             signal.signal(signal.SIGALRM, _handle_timeout)
             signal.alarm(seconds)
-            print app
             try:
                 result = func(*args, **kwargs)
             finally:
@@ -110,7 +111,6 @@ def timeout(seconds, app):
         return wraps(func)(wrapper)
 
     return decorator
-
 
 
 def verify_id(ctx, param, app):
