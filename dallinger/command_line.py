@@ -48,7 +48,6 @@ from dallinger.utils import GitClient
 from dallinger.version import __version__
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-start = time.time()
 
 header = """
     ____        ____
@@ -85,20 +84,26 @@ def error(msg, delay=0.5, chevrons=True, verbose=True):
 
 
 def timeout(seconds):
-    """Timeout decorator"""
+    """Timeout after certain number of seconds."""
     def decorator(func):
         def wrapper(*args, **kwargs):
             def _handle_timeout(signum, frame):
-                config = get_config()
-                config.load()
-                app = kwargs['app']
                 try:
-                    timeoutEmail = EmailingHITMessager(when=None, assignment_id=None, hit_duration=seconds,
-                                                       time_active=seconds, config=config, app=app)
+                    config = get_config()
+                    config.load()
+                    heroku_config = {
+                        "contact_email_on_error": config["contact_email_on_error"],
+                        "dallinger_email_username": config["dallinger_email_address"],
+                        "dallinger_email_key": config["dallinger_email_password"],
+                        "whimsical": False
+                    }
+                    email = EmailingHITMessager(when=time, assignment_id=None,
+                                                hit_duration=seconds, time_active=seconds,
+                                                config=heroku_config)
                     log("Sending email...")
-                    timeoutEmail.send_idle_experiment()
+                    email.send_idle_experiment()
                 except KeyError:
-                    log("Config not set to send emails...")
+                    log("Config keys not set to send emails...")
 
             signal.signal(signal.SIGALRM, _handle_timeout)
             signal.alarm(seconds)

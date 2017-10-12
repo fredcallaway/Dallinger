@@ -111,8 +111,7 @@ Time since participant started: {minutes_so_far}
 idle_template = """Dear experimenter,
 
 This is an automated email from Dallinger. You are receiving this email because
-your dyno has been running for over {minutes_so_far}. You can destroy your app
-using the command `dallinger destroy.`
+your dyno has been running for over {minutes_so_far} minutes.`
 
 Best,
 
@@ -128,7 +127,7 @@ Time since participant started: {minutes_so_far}
 
 class EmailingHITMessager(object):
 
-    def __init__(self, when, assignment_id, hit_duration, time_active, config, server=None, app=None):
+    def __init__(self, when, assignment_id, hit_duration, time_active, config, server=None):
         self.when = when
         self.assignment_id = assignment_id
         self.duration = round(hit_duration / 60)
